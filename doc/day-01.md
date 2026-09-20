@@ -125,7 +125,7 @@ distributed-cache-lab/
 │
 ├── src/
 │   └── main/
-│       ├── java/com/niro/cachelab/
+│       ├── java/com/example/cachelab/
 │       │   ├── controller/
 │       │   │   └── ProductController.java
 │       │   │
