@@ -148,7 +148,6 @@ distributed-cache-lab/
 │           └── application.properties
 │
 ├── docs/
-│   └── day-01.md
 │
 └── pom.xml
 ```
@@ -675,10 +674,6 @@ Day 01 covered:
 - Basic application logging
 - Source-of-truth design
 
-The main takeaway is:
-
-> Before introducing a cache, first establish a reliable source of truth and understand the normal request flow.
-
 ---
 
 ## 20. Current Limitation
@@ -757,18 +752,4 @@ The goal is to make repeated product requests avoid unnecessary PostgreSQL reads
 - **Day 09** — Centralized Logging with ELK
 - **Day 10** — Cache Stampede + Distributed Lock
 
----
 
-## Repository
-
-Project:
-
-```text
-distributed-cache-lab
-```
-
-Recommended location for this file:
-
-```text
-docs/day-01.md
-```
