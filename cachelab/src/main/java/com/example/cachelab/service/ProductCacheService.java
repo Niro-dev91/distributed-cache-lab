@@ -129,4 +129,26 @@ public class ProductCacheService {
 
                 return CACHE_PREFIX + productId;
         }
+
+        public void evict(Long productId) {
+
+                String key = buildKey(productId);
+
+                Boolean deleted = redisTemplate.delete(key);
+
+                if (Boolean.TRUE.equals(deleted)) {
+
+                        cacheMetricsService.recordEviction();
+
+                        log.info(
+                                        "CACHE_EVICT productId={}",
+                                        productId);
+
+                } else {
+
+                        log.info(
+                                        "CACHE_EVICT_SKIPPED productId={} reason=KEY_NOT_FOUND",
+                                        productId);
+                }
+        }
 }

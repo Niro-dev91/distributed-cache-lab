@@ -7,14 +7,13 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class CacheMetricsService {
 
-    private final AtomicLong hits =
-            new AtomicLong();
+    private final AtomicLong hits = new AtomicLong();
 
-    private final AtomicLong misses =
-            new AtomicLong();
+    private final AtomicLong misses = new AtomicLong();
 
-    private final AtomicLong writes =
-            new AtomicLong();
+    private final AtomicLong writes = new AtomicLong();
+
+    private final AtomicLong evictions = new AtomicLong();
 
     public void recordHit() {
         hits.incrementAndGet();
@@ -42,13 +41,20 @@ public class CacheMetricsService {
 
     public double getHitRatio() {
 
-        long total =
-                hits.get() + misses.get();
+        long total = hits.get() + misses.get();
 
         if (total == 0) {
             return 0;
         }
 
         return (double) hits.get() / total;
+    }
+
+    public void recordEviction() {
+        evictions.incrementAndGet();
+    }
+
+    public long getEvictions() {
+        return evictions.get();
     }
 }

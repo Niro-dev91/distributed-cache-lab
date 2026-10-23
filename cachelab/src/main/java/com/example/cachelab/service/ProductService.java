@@ -116,11 +116,18 @@ public class ProductService {
                         Long id,
                         ProductRequest request) {
 
+                log.info("Updating product productId={}", id);
+
                 Product product = productRepository
                                 .findById(id)
-                                .orElseThrow(() -> new ResponseStatusException(
-                                                NOT_FOUND,
-                                                "Product not found"));
+                                .orElseThrow(() -> {
+
+                                        log.warn("Product not found productId={}", id);
+
+                                        return new ResponseStatusException(
+                                                        NOT_FOUND,
+                                                        "Product not found");
+                                });
 
                 product.update(
                                 request.name(),
@@ -133,19 +140,39 @@ public class ProductService {
                                 "Product updated productId={}",
                                 id);
 
-                return mapToResponse(updatedProduct);
+                ProductResponse response = mapToResponse(updatedProduct);
+
+                /*
+                 * Remove stale cached version.
+                 */
+                productCacheService.evict(id);
+
+                log.info("Product updated productId={}", id);
+
+                return response;
         }
 
         @Transactional
         public void deleteProduct(Long id) {
 
+                log.info("Deleting product productId={}", id);
+
                 Product product = productRepository
                                 .findById(id)
-                                .orElseThrow(() -> new ResponseStatusException(
-                                                NOT_FOUND,
-                                                "Product not found"));
+                                .orElseThrow(() -> {
+
+                                        log.warn(
+                                                        "Product not found productId={}",
+                                                        id);
+
+                                        return new ResponseStatusException(
+                                                        NOT_FOUND,
+                                                        "Product not found");
+                                });
 
                 productRepository.delete(product);
+
+                productCacheService.evict(id);
 
                 log.info(
                                 "Product deleted productId={}",

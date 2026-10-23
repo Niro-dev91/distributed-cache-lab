@@ -14,10 +14,8 @@ public class CacheMetricsController {
     private final CacheMetricsService cacheMetricsService;
 
     public CacheMetricsController(
-            CacheMetricsService cacheMetricsService
-    ) {
-        this.cacheMetricsService =
-                cacheMetricsService;
+            CacheMetricsService cacheMetricsService) {
+        this.cacheMetricsService = cacheMetricsService;
     }
 
     @GetMapping("/metrics")
@@ -33,8 +31,10 @@ public class CacheMetricsController {
                 "writes",
                 cacheMetricsService.getWrites(),
 
+                "evictions",
+                cacheMetricsService.getEvictions(),
+
                 "hitRatio",
-                cacheMetricsService.getHitRatio()
-        );
+                cacheMetricsService.getHitRatio());
     }
 }
