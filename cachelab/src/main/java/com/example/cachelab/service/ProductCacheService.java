@@ -29,15 +29,20 @@ public class ProductCacheService {
 
         private final CacheMetricsService cacheMetricsService;
 
+        private final String instanceId;
+
         public ProductCacheService(
                         StringRedisTemplate redisTemplate,
                         ObjectMapper objectMapper,
                         CacheMetricsService cacheMetricsService,
-                        @Value("${app.cache.product-ttl-minutes}") long ttlMinutes) {
+                        @Value("${app.cache.product-ttl-minutes}") long ttlMinutes,
+                        @Value("${app.instance-id}") String instanceId) {
                 this.redisTemplate = redisTemplate;
                 this.objectMapper = objectMapper;
                 this.cacheMetricsService = cacheMetricsService;
                 this.CACHE_TTL = Duration.ofMinutes(ttlMinutes);
+                this.instanceId = instanceId;
+
         }
 
         public Optional<ProductResponse> get(Long productId) {
@@ -53,7 +58,8 @@ public class ProductCacheService {
                         cacheMetricsService.recordMiss();
 
                         log.info(
-                                        "CACHE_MISS productId={}",
+                                        "instance={} CACHE_MISS productId={}",
+                                        instanceId,
                                         productId);
 
                         return Optional.empty();
@@ -70,8 +76,8 @@ public class ProductCacheService {
                         cacheMetricsService.recordHit();
 
                         log.info(
-                                        "CACHE_HIT productId={} remainingTtlSeconds={}",
-                                        productId, ttl);
+                                        "instance={} CACHE_HIT productId={} remainingTtlSeconds={}",
+                                        instanceId,productId, ttl);
 
                         return Optional.of(product);
 
@@ -108,7 +114,8 @@ public class ProductCacheService {
                         cacheMetricsService.recordWrite();
 
                         log.info(
-                                        "CACHE_WRITE productId={} ttlSeconds={}",
+                                        "instance={} CACHE_WRITE productId={} ttlSeconds={}",
+                                        instanceId,
                                         productId,
                                         CACHE_TTL.toSeconds());
 
@@ -141,7 +148,8 @@ public class ProductCacheService {
                         cacheMetricsService.recordEviction();
 
                         log.info(
-                                        "CACHE_EVICT productId={}",
+                                        "instance={} CACHE_EVICT productId={}",
+                                        instanceId,
                                         productId);
 
                 } else {
